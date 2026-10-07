@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#5b4bdb"><link rel="icon" href="icon-192.png"><title>बिजनेस आइडिया फाइंडर</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1b1e2b;--mu:#6a7085;--pr:#5b4bdb;--ac:#e8e5ff;--ok:#16a34a;--wa:#d97706;--bad:#dc2626;--bd:#e3e5ee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12131a;--card:#1d1f2b;--tx:#eef0f7;--mu:#9aa0b8;--ac:#2d2a55;--bd:#2c2f40}}
+:root[data-theme=dark]{--bg:#12131a;--card:#1d1f2b;--tx:#eef0f7;--mu:#9aa0b8;--ac:#2d2a55;--bd:#2c2f40}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,"Noto Sans Devanagari",sans-serif}
+#app{max-width:560px;margin:auto;padding:16px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.bar{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;flex:1;margin:0 10px}.bar i{display:block;height:100%;background:var(--pr);transition:.3s}
+.ib{background:none;border:0;font-size:22px;color:var(--tx);cursor:pointer}
+h1{font-size:28px;margin:12px 0}h2{font-size:22px;margin:12px 0}h3{font-size:17px;margin:18px 0 6px}
+p{color:var(--mu);margin:6px 0}
+.hero{text-align:center;padding-top:40px}.hero .big{font-size:96px}
+.btn{display:block;width:100%;padding:16px;border:0;border-radius:14px;background:var(--pr);color:#fff;font-size:18px;font-weight:600;margin-top:18px;cursor:pointer}
+.btn.s{background:var(--ac);color:var(--pr);margin-top:8px;padding:12px;font-size:15px}
+.btn:disabled{opacity:.4}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--bd);border-radius:16px;padding:16px;margin:10px 0;color:var(--tx);font-size:17px;cursor:pointer}
+.opt small{display:block;color:var(--mu);font-size:14px}.opt.on{border-color:var(--pr);background:var(--ac)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:10px 14px;border-radius:99px;border:2px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer;font-size:15px}.chip.on{border-color:var(--pr);background:var(--ac)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin:10px 0}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.m{font-weight:700;color:var(--pr)}.best{border:2px solid var(--pr);background:var(--ac)}
+.tag{font-size:12px;padding:2px 8px;border-radius:9px;background:var(--bd)}
+input[type=text],input[type=number],input[type=search]{width:100%;padding:13px;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--tx);font-size:16px}
+table{width:100%;border-collapse:collapse}td{padding:6px 0;border-bottom:1px solid var(--bd)}td:last-child{text-align:right;white-space:nowrap}
+.tot td{font-weight:700;border:0}.note{font-size:13px;color:var(--mu)}
+ul{padding-left:20px;margin:4px 0}li{margin:3px 0}
+</style></head><body><div id="app"></div>
+<script>
+// [name,emoji,invMin,invMax,profMin,profMax,risk(1-3),growth(1-3),cats,needsSpace]
+const D={
+v:[["बकरी पालन","🐐",50000,300000,15000,40000,2,3,"animal,farm",1],["मुर्गी पालन","🐔",30000,200000,12000,30000,2,2,"animal",1],["अंडा उत्पादन","🥚",60000,300000,15000,35000,2,2,"animal",1],["डेयरी/दूध व्यवसाय","🐄",200000,1000000,30000,80000,2,3,"animal",1],["पशु चारा व्यवसाय","🌾",20000,100000,8000,25000,1,2,"farm,animal,shop",0],["वर्मी कम्पोस्ट","🪱",10000,60000,8000,25000,1,2,"farm,mfg",1],["मशरूम उत्पादन","🍄",5000,50000,8000,30000,2,3,"farm",0],["मधुमक्खी पालन","🐝",15000,100000,10000,30000,2,2,"farm,animal",1],["मछली पालन","🐟",50000,300000,15000,40000,2,2,"animal,farm",1],["सब्जी उत्पादन","🥬",10000,80000,8000,30000,2,2,"farm",1],["फल/नर्सरी","🌱",10000,100000,8000,25000,1,2,"farm",1],["आटा चक्की","⚙️",60000,250000,15000,35000,1,2,"mfg,shop",0],["मसाला निर्माण","🌶️",20000,150000,10000,30000,1,2,"mfg,food",0],["अगरबत्ती निर्माण","🪔",15000,100000,8000,25000,1,2,"mfg",0],["कृषि उपकरण किराये पर","🚜",100000,800000,20000,60000,2,2,"service,farm",1],["पानी/RO सेवा","💧",150000,500000,20000,50000,1,2,"service",0],["पोल्ट्री फीड दुकान","🏪",50000,300000,12000,30000,1,2,"shop,animal",0],["दूध कलेक्शन सेंटर","🥛",50000,300000,12000,35000,1,2,"animal,service",0],["कृषि उत्पाद बिक्री","🧪",50000,300000,12000,35000,1,2,"shop,farm",0],["छोटा किराना स्टोर","🛒",30000,300000,10000,30000,1,1,"shop",0]],
+c:[["पानीपुरी ठेला","🥘",10000,40000,15000,35000,1,2,"food",0],["चाय की दुकान","☕",15000,60000,12000,30000,1,1,"food,shop",0],["नाश्ता सेंटर","🥐",30000,150000,15000,40000,1,2,"food",0],["फास्ट फूड सेंटर","🍔",50000,250000,20000,50000,2,3,"food",0],["जूस सेंटर","🧃",30000,120000,12000,35000,1,2,"food",0],["जनरल स्टोर","🏬",100000,500000,15000,40000,1,1,"shop",0],["मोबाइल accessories","🎧",30000,150000,10000,30000,1,2,"shop,tech",0],["मोबाइल repair","📱",20000,100000,12000,35000,1,2,"service,tech",0],["कपड़े की दुकान","👕",150000,600000,20000,50000,2,2,"shop",0],["जूते-चप्पल दुकान","👟",100000,400000,15000,40000,2,1,"shop",0],["फल-सब्जी दुकान","🍎",15000,80000,10000,30000,2,1,"shop,food",0],["आटा चक्की","⚙️",80000,300000,15000,35000,1,1,"mfg,shop",0],["बाइक service center","🏍️",100000,400000,20000,50000,1,2,"service",1],["बाइक/car washing","🚗",30000,200000,15000,40000,1,2,"service",1],["फोटो/प्रिंटिंग सेंटर","🖨️",80000,300000,15000,40000,1,2,"service,tech",0],["साइबर/ऑनलाइन सेवा केंद्र","💻",50000,200000,15000,40000,1,2,"service,tech,online",0],["इलेक्ट्रिकल सामान दुकान","💡",100000,500000,15000,40000,1,1,"shop",0],["हार्डवेयर दुकान","🔧",150000,700000,20000,50000,1,1,"shop",0],["टिफिन सर्विस","🍱",15000,80000,12000,40000,1,2,"food,service",0],["building material supply","🧱",200000,1000000,25000,70000,2,2,"shop",1]],
+b:[["Cloud Kitchen","🍳",100000,500000,30000,100000,2,3,"food",0],["Tiffin Service","🍱",20000,100000,15000,50000,1,2,"food,service",0],["Fast Food Delivery","🛵",50000,300000,20000,60000,2,3,"food,online",0],["Digital Marketing Agency","📢",10000,100000,25000,120000,2,3,"tech,service,online",0],["AI Services","🤖",5000,100000,25000,150000,2,3,"tech,service,online",0],["Website/App Development","🌐",10000,100000,25000,150000,2,3,"tech,service,online",0],["Online Clothing Store","🛍️",30000,300000,15000,80000,2,3,"online,shop",0],["Online Grocery","🥦",100000,500000,20000,70000,2,3,"online,shop,food",0],["Home Cleaning Service","🧹",20000,150000,20000,60000,1,3,"service",0],["Laundry Service","🧺",100000,400000,20000,60000,1,2,"service",1],["Beauty/Salon","💇",100000,500000,25000,80000,1,2,"service,shop",1],["Fitness/Gym","🏋️",300000,1500000,30000,120000,2,2,"service",1],["Content Creation Agency","🎬",10000,100000,20000,100000,2,3,"tech,online,service",0],["Photography/Videography","📷",50000,300000,20000,80000,2,2,"service,tech",0],["Event Management","🎉",20000,200000,25000,100000,2,3,"service",0],["Packaging Business","📦",100000,500000,25000,70000,1,2,"mfg",1],["Mini Warehouse","🏭",300000,1500000,30000,100000,2,2,"service",1],["Food Cart","🌭",30000,150000,15000,45000,1,2,"food",0],["Coaching/Online Education","🎓",10000,100000,20000,100000,1,3,"service,online,tech",0],["Solar/EV-related service","🔋",100000,800000,30000,120000,2,3,"service,tech",0]]};
+const INT={food:"खाना/नाश्ता",farm:"खेती",animal:"पशुपालन",shop:"दुकान",mfg:"Manufacturing",service:"Service",tech:"Technology/AI",online:"Online",any:"कोई भी"};
+const BUD=[["₹0 – ₹500","बहुत कम लागत",500],["₹500 – ₹5,000","छोटा बिजनेस",5000],["₹5,000 – ₹25,000","Low Investment",25000],["₹25,000 – ₹1 लाख","Small Business",100000],["₹1 लाख – ₹5 लाख","Growing Business",500000],["₹5 लाख – ₹10 लाख","",1000000],["₹10 लाख+","",1500000]];
+let S={step:0,loc:null,bud:null,land:null,size:null,time:null,int:[],sort:"match",q:"",view:null,fav:[],cmp:[]};
+try{S.fav=JSON.parse(localStorage.getItem("fav")||"[]")}catch(e){}
+const $=document.getElementById("app");
+const R=n=>"₹"+Math.round(n/100)*100>=0?"₹"+(Math.round(n/100)*100).toLocaleString("en-IN"):"";
+const rs=n=>"₹"+(Math.round(n/100)*100).toLocaleString("en-IN");
+const rr=a=>rs(a[0])+"–"+rs(a[1]);
+function go(n){S.step=n;render();scrollTo(0,0)}
+function sav(){try{localStorage.setItem("fav",JSON.stringify(S.fav))}catch(e){}}
+function score(d){let b=S.bud,s=55;
+ if(b>=d[2]){s+=15+Math.min(10,(b-d[2])/d[2]*3)}else s-=Math.min(35,(1-b/d[2])*45);
+ if(S.int.length&&!S.int.includes("any")){const c=d[8].split(",");if(S.int.some(i=>c.includes(i)))s+=14}else s+=5;
+ if(d[9]&&S.land==="no")s-=15;else if(d[9]&&S.land==="yes")s+=5;
+ if(S.time==="2"&&d[6]>1)s-=2;if(S.time==="1"&&d[9])s-=5;if(S.time==="8"||S.time==="4")s+=3;
+ return Math.max(25,Math.min(98,Math.round(s)))}
+function items(){return D[S.loc].map((d,i)=>({d,i,m:score(d),cost:Math.min(Math.max(S.bud,d[2]),d[3])}))}
+function sorted(){let a=items();const k={match:(x,y)=>y.m-x.m,inv:(x,y)=>x.d[2]-y.d[2],prof:(x,y)=>y.d[5]-x.d[5],risk:(x,y)=>x.d[6]-y.d[6]||y.m-x.m,grow:(x,y)=>y.d[7]-x.d[7]||y.m-x.m}[S.sort];
+ // budget-fit businesses always ranked above unaffordable ones
+ return a.sort((x,y)=>{const fx=S.bud>=x.d[2],fy=S.bud>=y.d[2];return fx!==fy?(fy-fx):k(x,y)})}
+const RK=["","🟢 कम","🟡 मध्यम","🔴 ज़्यादा"];
+function head(n,t){return `<div class=top><button class=ib onclick="go(${n-1})">←</button><div class=bar><i style="width:${n*20}%"></i></div><button class=ib onclick="tg()">🌓</button></div><h2>${t}</h2>`}
+function tg(){const r=document.documentElement,d=getComputedStyle(r).getPropertyValue("--bg").trim()==="#12131a";r.dataset.theme=d?"light":"dark"}
+function render(){let h="";
+if(S.step===0)h=`<div class=hero><div class=big>🚀</div><h1>🚀 अपना सही बिजनेस खोजें</h1><p>आप कहाँ बिजनेस करना चाहते हैं और आपका बजट कितना है? हम आपकी स्थिति के हिसाब से सबसे अच्छे बिजनेस आइडिया खोजेंगे।</p><button class=btn onclick="go(1)">शुरू करें →</button><p class=note>कुछ आसान सवालों के जवाब दें और अपने लिए सही बिजनेस खोजें।</p>${S.fav.length?`<button class="btn s" onclick="go(9)">⭐ सेव किए बिजनेस (${S.fav.length})</button>`:""}</div>`;
+else if(S.step===1){const L=[["v","🏡 गाँव","गाँव और ग्रामीण क्षेत्र में चलने वाले बिजनेस"],["c","🏙️ मध्यम/छोटा शहर","छोटे और मध्यम शहरों में चलने वाले बिजनेस"],["b","🌆 बड़ा शहर","बड़े शहर और ज्यादा ग्राहक वाले क्षेत्रों के बिजनेस"]];
+h=head(1,"📍 आप कहाँ बिजनेस करना चाहते हैं?")+L.map(l=>`<button class="opt ${S.loc===l[0]?"on":""}" onclick="S.loc='${l[0]}';render()">${l[1]}<small>${l[2]}</small></button>`).join("")+`<button class=btn ${S.loc?"":"disabled"} onclick="go(2)">आगे →</button>`}
+else if(S.step===2){h=head(2,"💰 आपका बजट कितना है?")+BUD.map((b,i)=>`<button class="opt ${S.bi===i?"on":""}" onclick="S.bi=${i};S.bud=${b[2]};render()">${b[0]}<small>${b[1]}</small></button>`).join("")+`<div class="opt ${S.bi==="x"?"on":""}">✏️ अपना बजट डालें<input type=number inputmode=numeric placeholder="जैसे 75000" value="${S.bi==="x"?S.bud:""}" oninput="S.bi='x';S.bud=+this.value;document.getElementById('nx').disabled=!(S.bud>0)" style="margin-top:8px"></div><button id=nx class=btn ${S.bud>0?"":"disabled"} onclick="go(3)">आगे →</button>`}
+else if(S.step===3){const o=(k,v,t)=>`<button class="chip ${S[k]===v?"on":""}" onclick="S['${k}']='${v}';${k==="land"&&v!=="yes"?"S.size=null;":""}render()">${t}</button>`;
+h=head(3,"कुछ और सवाल")+`<h3>आपके पास जमीन/जगह है?</h3><div class=chips>${o("land","yes","हाँ")}${o("land","no","नहीं")}${o("land","rent","किराए पर ले सकता हूँ")}</div>`+(S.land==="yes"?`<h3>कितनी जगह?</h3><div class=chips>${["500 sq ft तक","500–1,000 sq ft","1,000–5,000 sq ft","5,000 sq ft+","1 acre+"].map(t=>o("size",t,t)).join("")}</div>`:"")+`<h3>रोज कितना समय दे सकते हैं?</h3><div class=chips>${o("time","2","1–2 घंटे")}${o("time","4","2–4 घंटे")}${o("time","8","4–8 घंटे")}${o("time","12","पूरा दिन")}</div><h3>आपकी रुचि किसमें है?</h3><div class=chips>${Object.entries(INT).map(([k,t])=>`<button class="chip ${S.int.includes(k)?"on":""}" onclick="ti('${k}')">${t}</button>`).join("")}</div><button class=btn onclick="go(4)">आइडिया दिखाएँ →</button>`}
+else if(S.step===4){const a=sorted().filter(x=>!S.q||x.d[0].toLowerCase().includes(S.q.toLowerCase())),t=a[0];
+const so=[["match","⭐ Best Match"],["inv","💰 Lowest Investment"],["prof","📈 Highest Profit"],["risk","🟢 Lowest Risk"],["grow","🚀 Highest Growth"]];
+h=head(4,"🎯 आपके लिए 20 बिजनेस आइडिया")+`<input type=search placeholder="🔍 खोजें" value="${S.q}" oninput="S.q=this.value;render2()" id=sq>`+`<div class=chips style="margin:10px 0">${so.map(s=>`<button class="chip ${S.sort===s[0]?"on":""}" onclick="S.sort='${s[0]}';render()">${s[1]}</button>`).join("")}</div><div id=lst>${lst(a)}</div>`}
+else if(S.step===5)h=detail();
+else if(S.step===6)h=calc();
+else if(S.step===9){h=head(0,"⭐ सेव किए बिजनेस")+(S.fav.map(k=>{const[l,i]=k.split(":"),d=D[l][i];return `<div class=card><div class=row><b>${d[1]} ${d[0]}</b><button class="btn s" style="width:auto;margin:0" onclick="S.loc='${l}';S.view=${i};if(!S.bud){S.bud=d[2];}go(5)">देखें →</button></div></div>`}).join("")||"<p>अभी कुछ सेव नहीं है।</p>")}
+else if(S.step===10)h=compare();
+$.innerHTML=h;
+if(S.step===4){const e=document.getElementById("sq");}}
+function ti(k){const i=S.int.indexOf(k);if(k==="any")S.int=["any"];else{S.int=S.int.filter(x=>x!=="any");i>=0?S.int.splice(i,1):S.int.push(k)}render()}
+function render2(){document.getElementById("lst").innerHTML=lst(sorted().filter(x=>!S.q||x.d[0].toLowerCase().includes(S.q.toLowerCase())))}
+function lst(a){let o="";const top=a[0];
+if(top&&!S.q&&S.sort==="match")o+=`<div class="card best"><b>🏆 आपके लिए सबसे बेहतर</b><div class=row style="margin:6px 0"><h2 style="margin:0">${top.d[1]} ${top.d[0]}</h2><span class=m>${top.m}%</span></div><b>यह आपके लिए क्यों चुना गया?</b><ul><li>आपकी location match करती है</li><li>${S.bud>=top.d[2]?"आपका budget suitable है":"बजट थोड़ा कम है, धीरे शुरू करें"}</li>${top.d[9]&&S.land==="yes"?"<li>जमीन उपलब्ध है</li>":""}${S.int.some(i=>top.d[8].split(",").includes(i))?"<li>आपकी रुचि match करती है</li>":""}<li>market opportunity अच्छी हो सकती है</li></ul><button class=btn onclick="op(${top.i})">पूरा बिजनेस प्लान देखें →</button></div>`;
+const med=["🥇","🥈","🥉"];
+a.forEach((x,n)=>{o+=`<div class=card><div class=row><b>${S.sort==="match"&&n<3&&!S.q?med[n]+" ":""}${x.d[1]} ${x.d[0]}</b><span class=m>${x.m}%</span></div><p style="margin:4px 0">Investment: ${rr([x.d[2],x.d[3]])}<br>Potential Profit: ${rr([x.d[4],x.d[5]])}/month<br>Risk: ${RK[x.d[6]]} ${S.bud<x.d[2]?'<span class=tag>बजट से ज़्यादा</span>':""}</p><div class=row><label class=note><input type=checkbox ${S.cmp.includes(x.i)?"checked":""} onchange="cm(${x.i})"> तुलना</label><button class="btn s" style="width:auto;margin:0" onclick="op(${x.i})">देखें →</button></div></div>`});
+if(S.cmp.length>=2)o+=`<button class=btn onclick="go(10)">⚖️ ${S.cmp.length} बिजनेस Compare करें</button>`;return o}
+function cm(i){const k=S.cmp.indexOf(i);k>=0?S.cmp.splice(k,1):(S.cmp.length<3?S.cmp.push(i):0);render()}
+function op(i){S.view=i;go(5)}
+function calcm(d){const cost=Math.min(Math.max(S.bud,d[2]),d[3]),f=d[3]===d[2]?1:(cost-d[2])/(d[3]-d[2]);
+const profit=Math.round((d[4]+(d[5]-d[4])*(0.35+0.4*f))/100)*100*(S.bud<d[2]?0.7:1);const exp=cost*0.1;return{cost,profit,exp,rev:profit+exp,be:cost/profit}}
+function detail(){const d=D[S.loc][S.view],m=score(d),c=calcm(d),k=S.loc+":"+S.view,sv=S.fav.includes(k);
+const parts=[["जमीन/किराया/Shed",.18],["पशु/मशीन/उपकरण/स्टॉक",.32],["License/registration",.03],["Feed/कच्चा माल (शुरुआती)",.12],["Labour/Transport (शुरुआती)",.08],["Working Capital",.17],["Emergency reserve",.10]];
+const mp=[["कच्चा माल/Feed/Stock",.4],["Labour",.2],["बिजली/पानी",.08],["Transport",.1],["Maintenance",.07],["Rent",.1],["Packaging/Other",.05]];
+const t=(a,tot)=>a.map(p=>`<tr><td>${p[0]}</td><td>${rs(tot*p[1])}</td></tr>`).join("");
+return `<div class=top><button class=ib onclick="go(4)">←</button><button class=ib onclick="tg()">🌓</button></div><h1>${d[1]} ${d[0]}</h1><p class=m>Match Score: ${m}%</p><button class="btn s" style="width:auto;padding:10px 16px" data-t="${d[0]}। मैच ${m} प्रतिशत। शुरुआती लागत ${rs(c.cost)}। अनुमानित मासिक मुनाफा ${rs(c.profit)}। यह केवल अनुमान है।" onclick="say(this.dataset.t)">🔊 सुनें</button>
+<h3>1. यह बिजनेस क्या है?</h3><p>${d[0]} एक ${INT[d[8].split(",")[0]]} से जुड़ा बिजनेस है। इसमें आप ${S.loc==="v"?"गाँव और आस-पास के बाजार":S.loc==="c"?"शहर के स्थानीय ग्राहकों":"बड़े शहर के ग्राहकों"} को सेवा या उत्पाद देकर कमाई करते हैं। शुरू करने से पहले इसका काम सीखना ज़रूरी है।</p>
+<h3>2. कितने पैसे चाहिए?</h3><div class=card><table>${t(parts,c.cost)}<tr class=tot><td>अनुमानित कुल शुरुआती लागत</td><td>${rs(c.cost)}</td></tr></table></div><p class=note>सामान्य रेंज: ${rr([d[2],d[3]])}</p>
+<h3>3. Monthly Expense</h3><div class=card><table>${t(mp,c.exp)}<tr class=tot><td>कुल Monthly Expense</td><td>${rs(c.exp)}</td></tr></table></div>
+<h3>4. Revenue</h3><div class=card>अनुमानित Sales: <b>${rs(c.rev)}/महीना</b><p class=note>गणना: खर्च ${rs(c.exp)} + लक्षित मुनाफा ${rs(c.profit)} = ${rs(c.rev)}. यह मानकर कि आप ${rs(c.rev/26)}/दिन की बिक्री (26 दिन) कर पाएँ।</p></div>
+<h3>5. Profit</h3><div class=card>Profit = Revenue − Expenses<br>${rs(c.rev)} − ${rs(c.exp)} = <b>${rs(c.profit)}/महीना</b><p class=note>यह कमाई की गारंटी नहीं है।</p></div>
+<h3>6. Break-even</h3><div class=card>Investment: ${rs(c.cost)}<br>Monthly Profit: ${rs(c.profit)}<br><b>Approximate Break-even: ${c.be<1?"1 महीने से कम":Math.ceil(c.be)+" महीने"}</b><p class=note>यह केवल अनुमान है।</p></div>
+<h3>7. 📍 सही जगह कैसे चुनें?</h3><ul><li>ग्राहक कहाँ मिलेंगे और भीड़ कितनी है</li><li>आस-पास competition</li><li>सड़क/मार्केट से दूरी</li><li>पानी और बिजली की उपलब्धता</li><li>transport, supplier, raw material</li><li>किराया बजट में हो</li></ul>
+<h3>8. Customer कैसे मिलेंगे?</h3><ul><li>स्थानीय बाजार और दुकानदारों से संपर्क</li><li>WhatsApp, Facebook, Google Business Profile</li><li>होटल/रेस्टोरेंट/घर-घर बिक्री</li><li>referral और स्थानीय advertising</li></ul>
+<h3>9. शुरू करने की प्रक्रिया</h3><ul><li>Step 1: Market research</li><li>Step 2: Location final</li><li>Step 3: Cost calculation</li><li>Step 4: Supplier खोजें</li><li>Step 5: Equipment/stock खरीदें</li><li>Step 6: Business setup</li><li>Step 7: Marketing शुरू करें</li><li>Step 8: Sales शुरू करें</li></ul>
+<h3>10. ⚠️ Risk</h3><ul><li>ग्राहक कम → पहले 10 पक्के ग्राहक बनाएँ</li><li>competition → बेहतर quality/सेवा दें</li><li>लागत बढ़ना → 10% buffer रखें</li><li>बिक्री कम → छोटे स्तर से शुरू करें</li><li>मौसम/बीमारी → बीमा और सावधानी</li><li>market price change → कई supplier रखें</li></ul>
+<h3>11. Business Scale</h3><p>छोटा (शुरुआत) → मध्यम (${rs(c.rev*2)}/महीना sales) → बड़ा (${rs(c.rev*5)}/महीना sales): पहले 6 महीने सीखें, फिर मुनाफे से विस्तार करें।</p>
+<div class="card best"><b>🎯 हमारा निष्कर्ष</b><p style="color:var(--tx)">आपकी दी हुई जानकारी के आधार पर यह बिजनेस आपके लिए अच्छा विकल्प हो सकता है। शुरू करने से पहले अपने स्थानीय बाजार, competition, वास्तविक लागत और ग्राहक मांग की जांच जरूर करें।</p></div>
+<button class=btn onclick="go(6)">🟢 Profit / Cost Calculator</button><button class="btn s" onclick="go(10);S.cmp.includes(${S.view})||S.cmp.push(${S.view})">🟢 Compare</button><button class="btn s" onclick="fv('${k}')">${sv?"✅ Saved":"🟢 Save Business"}</button><button class="btn s" onclick="go(4)">🟢 दूसरा Business देखें</button><button class="btn s" onclick="S={...S,step:1,loc:null,bi:null,bud:null,land:null,size:null,time:null,int:[],cmp:[]};render()">🟢 फिर से Search करें</button>`}
+function fv(k){const i=S.fav.indexOf(k);i>=0?S.fav.splice(i,1):S.fav.push(k);sav();render()}
+function calc(){const d=D[S.loc][S.view];return `<div class=top><button class=ib onclick="go(5)">←</button></div><h2>🧮 Calculator: ${d[0]}</h2><div class=card><p>कुल निवेश (₹)</p><input type=number id=ci value="${calcm(d).cost}" oninput="cc()"><p>महीने की बिक्री (₹)</p><input type=number id=cr value="${Math.round(calcm(d).rev)}" oninput="cc()"><p>महीने का खर्च (₹)</p><input type=number id=ce value="${Math.round(calcm(d).exp)}" oninput="cc()"><h3 id=co></h3></div>`}
+function cc(){const i=+ci.value,r=+cr.value,e=+ce.value,p=r-e;co.innerHTML=`Profit: ${rs(p)}/महीना<br>Break-even: ${p>0?Math.ceil(i/p)+" महीने":"मुनाफा नहीं"}`}
+function compare(){const a=S.cmp.map(i=>({d:D[S.loc][i],i}));return `<div class=top><button class=ib onclick="go(4)">←</button></div><h2>⚖️ तुलना</h2><div style="overflow-x:auto"><table style="min-width:420px"><tr><td></td>${a.map(x=>`<td><b>${x.d[1]} ${x.d[0]}</b></td>`).join("")}</tr><tr><td>Match</td>${a.map(x=>`<td>${score(x.d)}%</td>`).join("")}</tr><tr><td>Investment</td>${a.map(x=>`<td>${rr([x.d[2],x.d[3]])}</td>`).join("")}</tr><tr><td>Profit/माह</td>${a.map(x=>`<td>${rr([x.d[4],x.d[5]])}</td>`).join("")}</tr><tr><td>Risk</td>${a.map(x=>`<td>${RK[x.d[6]]}</td>`).join("")}</tr><tr><td>Growth</td>${a.map(x=>`<td>${"🚀".repeat(x.d[7])}</td>`).join("")}</tr></table></div>`}
+let snd=true,ac;try{snd=localStorage.getItem("snd")!=="0"}catch(e){}
+function tick(){if(!snd)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=880;g.gain.setValueAtTime(.15,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.08);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.09)}catch(e){}try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="hi-IN";speechSynthesis.speak(u)}catch(e){}}
+document.addEventListener("click",e=>{if(e.target.closest("button,.chip,.opt"))tick()},true);
+const sb=document.createElement("button");sb.style.cssText="position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:1px solid var(--bd);background:var(--card);font-size:20px;z-index:9";
+const up=()=>sb.textContent=snd?"🔊":"🔇";up();
+sb.onclick=()=>{snd=!snd;try{localStorage.setItem("snd",snd?"1":"0")}catch(e){}up();if(snd)tick()};document.body.appendChild(sb);
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
